@@ -44,9 +44,29 @@ form.addEventListener("submit", function(event) {
 // Deleting new diary entries
 document.querySelectorAll(".delete-entry").forEach(function(button) {
     button.addEventListener("click", function(e) {
-      e.preventDefault();
       let parentNode = this.parentNode;
       parentNode.parentNode.removeChild(parentNode);
     });
   });
   
+
+
+  const noteForm = document.querySelector("#diary-input-form")
+  noteForm.addEventListener("submit", (e) => { // Select form and add event listener to the submit button
+    e.preventDefault() // Prevent page refresh on click
+    const userData = { // 
+      entryName: document.querySelector("#entry-name-input").value,
+      entryContent: document.querySelector("#diary-input-content").value,
+    } // Select input values of username and password and save in an object
+    const sendNote = async () => {
+      try {
+        const data = await axios.post("http:localhost:3000/", userData)
+        document.querySelector("#entry-name-input").value = ""
+        document.querySelector("#diary-input-content").value = ""
+        console.log(data);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    sendNote()
+  })
