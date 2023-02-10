@@ -30,8 +30,8 @@ async function getOne(req, res) {
 
 async function getCategory(req, res) {
     try {
-        const id = parseInt(req.params.id);
-        const entry = await Diary.getOneById(id);
+        const category = parseInt(req.params.category);
+        const entry = await Diary.getCategory(category);
         res.status(200).json(entry);
     } catch (err) {
         res.status(404).json({ "error": err.message })
@@ -77,5 +77,5 @@ async function update(req, res) {
 }
 
 module.exports = {
-    index, getTop, getOne, create, destroy, update
+    index, getTop, getOne, create, destroy, update, getCategory
 }

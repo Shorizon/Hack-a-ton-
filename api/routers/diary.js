@@ -11,4 +11,5 @@ diaryRouter.get("/:id", diaryController.getOne)
 diaryRouter.post("/", diaryController.create)
 diaryRouter.delete("/:id", diaryController.destroy)
 diaryRouter.patch("/:id", diaryController.update)
+diaryRouter.get("/:category", diaryController.getCategory)
 module.exports = diaryRouter;

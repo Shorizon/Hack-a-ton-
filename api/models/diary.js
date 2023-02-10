@@ -47,6 +47,22 @@ class Diary {
         return new Diary(response.rows[0]);
     }
 
+    static async getMisc(data) {
+
+        if (!data) return ({
+            error: true,
+            messsage: "missing filter for the entries"
+        })
+
+        if (data.category) {
+            const response = await db.query("SELECT * FROM diary WHERE diary_category = $1;", [category]);
+            if (response.rows.length != 1) {
+                throw new Error("Unable to locate entry.")
+            }
+            return new Diary(response.rows[0]);
+        }
+    }
+
     static async getOneById(id) {
 
 
