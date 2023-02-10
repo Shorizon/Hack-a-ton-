@@ -22,6 +22,17 @@ class Diary {
         return response.rows.map(e => new Diary(e));
     }
 
+    static async getLatest() {
+        const response = await db.query("SELECT * FROM diary ORDER BY diary_id DESC LIMIT 1;");
+        if (response.rows.length < 1)
+            return ({
+                error: true,
+                messsage: "unable to locate any entries"
+            })
+
+        return response.rows.map(e => new Diary(e));
+    }
+
 
 }
 
