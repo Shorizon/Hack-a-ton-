@@ -22,7 +22,64 @@ class Diary {
         return response.rows.map(e => new Diary(e));
     }
 
+    static async getLatest() {
+        const response = await db.query("SELECT * FROM diary ORDER BY diary_id DESC LIMIT 1;");
+        if (response.rows.length < 1)
+            return ({
+                error: true,
+                messsage: "unable to locate any entries"
+            })
 
+        return response.rows.map(e => new Diary(e));
+    }
+
+    static async getOneById(id) {
+
+        if (!id || typeof id != "number") return ({
+            error: true,
+            messsage: "missing or wrong type of ID for the entries"
+        })
+
+        const response = await db.query("SELECT * FROM diary WHERE diary_id = $1;", [id]);
+        if (response.rows.length != 1) {
+            throw new Error("Unable to locate entry.")
+        }
+        return new Diary(response.rows[0]);
+    }
+
+
+    static async destroy() {
+
+        if (!this.id) return ({
+            error: true,
+            message: "the required information is missing"
+        })
+
+        const response = await db.query('DELETE  FROM diary WHERE diary_id = $1 RETURNING *;', [this.id]);
+
+        return new Diary(response.rows[0]);
+    }
+
+    static async create(data) {
+        const { name, content } = data
+        const check = await db.query("SELECT * FROM diary WHERE diary_name = $1;", [name]);
+
+        if (!name || !content)
+            return ({
+                error: true,
+                message: "both fields are required to store a new entry"
+            })
+
+        if (check.diary_name == name)
+            return ({
+                error: true,
+                message: "diary entry with this namealready exists"
+            })
+
+
+        const response = await db.query('INSERT INTO diary (diary_name, diary_content) VALUES ($1, $2) RETURNING *;', [name, content]);
+        return response.rows.map(e => new Diary(e))
+    }
 }
 
 module.exports = Diary;
