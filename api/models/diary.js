@@ -47,30 +47,50 @@ class Diary {
         return new Diary(response.rows[0]);
     }
 
+    static async getMisc(data) {
+
+        if (!data) return ({
+            error: true,
+            messsage: "missing filter for the entries"
+        })
+
+        if (data.category) {
+            const response = await db.query("SELECT * FROM diary WHERE diary_category = $1;", [category]);
+            if (response.rows.length != 1) {
+                throw new Error("Unable to locate entry.")
+            }
+            return new Diary(response.rows[0]);
+        }
+    }
+
     static async getOneById(id) {
+
 
         if (!id || typeof id != "number") return ({
             error: true,
             messsage: "missing or wrong type of ID for the entries"
         })
 
+
         const response = await db.query("SELECT * FROM diary WHERE diary_id = $1;", [id]);
         if (response.rows.length != 1) {
             throw new Error("Unable to locate entry.")
         }
         return new Diary(response.rows[0]);
+
     }
 
 
-    static async destroy() {
+    static async destroy(id) {
 
-        if (!this.id) return ({
+
+        if (!id) return ({
             error: true,
             message: "the required information is missing"
         })
 
-        const response = await db.query('DELETE  FROM diary WHERE diary_id = $1 RETURNING *;', [this.id]);
-
+        console.log(id)
+        const response = await db.query('DELETE FROM diary WHERE diary_id = $1 RETURNING *;', [id]);
         return new Diary(response.rows[0]);
     }
 
@@ -94,6 +114,24 @@ class Diary {
         const response = await db.query('INSERT INTO diary (diary_name, diary_content, diary_category) VALUES ($1, $2, $3) RETURNING *;', [name, content, category]);
         return response.rows.map(e => new Diary(e))
     }
+
+
+    static async update(data) {
+
+        if (!data || !this.id || !data.content) return ({
+            error: true,
+            message: "the required information is missing"
+        })
+
+        const response = await db.query("UPDATE diary SET diary_content = $1 WHERE diary_id = $2 RETURNING *;",
+            [data.content, this.id]);
+        if (response.rows.length != 1) {
+            throw new Error("Unable to update entry.")
+        }
+
+        return new Diary(response.rows[0]);
+    }
+
 }
 
 module.exports = Diary;
