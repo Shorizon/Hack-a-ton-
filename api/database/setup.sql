@@ -24,4 +24,24 @@ VALUES
         'day 2',
         'I have created a diary part 2',
         'work'
+    ),
+    (
+        'day 3',
+        'I have created a diary part 2',
+        'work'
+    ),
+    (
+        'day 4',
+        'I have created a diary part 2',
+        'fun'
+    ),
+    (
+        'day 5',
+        'I have created a diary part 2',
+        'work'
+    ),
+    (
+        'day 6',
+        'I have created a diary part 2',
+        'fun'
     )

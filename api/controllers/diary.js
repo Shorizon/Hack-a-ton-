@@ -30,7 +30,7 @@ async function getOne(req, res) {
 
 async function getCategory(req, res) {
     try {
-        const category = parseInt(req.params.category);
+        const category = req.params.category;
         const entry = await Diary.getCategory(category);
         res.status(200).json(entry);
     } catch (err) {

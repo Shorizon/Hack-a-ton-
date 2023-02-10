@@ -47,30 +47,26 @@ class Diary {
         return new Diary(response.rows[0]);
     }
 
-    static async getMisc(data) {
+    static async getCategory(category) {
 
-        if (!data) return ({
+        if (!category) return ({
             error: true,
-            messsage: "missing filter for the entries"
+            messsage: "missing or wrong type of category for the entries"
         })
 
-        if (data.category) {
-            const response = await db.query("SELECT * FROM diary WHERE diary_category = $1;", [category]);
-            if (response.rows.length != 1) {
-                throw new Error("Unable to locate entry.")
-            }
-            return new Diary(response.rows[0]);
+        const response = await db.query("SELECT * FROM diary WHERE diary_category = $1;", [category]);
+        if (response.rows.length < 0) {
+            throw new Error("Unable to locate entry.")
         }
+        return response.rows.map(e => new Diary(e));
     }
 
     static async getOneById(id) {
-
 
         if (!id || typeof id != "number") return ({
             error: true,
             messsage: "missing or wrong type of ID for the entries"
         })
-
 
         const response = await db.query("SELECT * FROM diary WHERE diary_id = $1;", [id]);
         if (response.rows.length != 1) {
@@ -82,7 +78,6 @@ class Diary {
 
 
     static async destroy(id) {
-
 
         if (!id) return ({
             error: true,
@@ -130,6 +125,21 @@ class Diary {
         }
 
         return new Diary(response.rows[0]);
+    }
+
+    static async getOneById(id) {
+
+        if (!id || typeof id != "number") return ({
+            error: true,
+            messsage: "missing or wrong type of ID for the entries"
+        })
+
+        const response = await db.query("SELECT * FROM diary WHERE diary_id = $1;", [id]);
+        if (response.rows.length != 1) {
+            throw new Error("Unable to locate entry.")
+        }
+        return new Diary(response.rows[0]);
+
     }
 
 }
