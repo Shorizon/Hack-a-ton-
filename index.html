@@ -44,7 +44,16 @@
             <!-- Part 2 start-->
             <section class="section-2">
                 <h1 class="section-heading">Diary Entries</h1>
-                <button id="add-entry">Add a diary entry</button>
+                <form id="diary-input-form">
+                    <label for="entry-name-input">Entry name:</label>
+                    <input type="text" id="entry-name-input" placeholder="Entry Title">
+                    <br><br>
+                    <label for="diary-input-content">Entry content:</label>
+                    <input type="text" id="diary-input-content" placeholder="Entry content">
+                    <br><br>
+                    <input type="submit" id="add-entry">Add a diary entry</input>
+                  </form>
+
                 <div class="entry">
                     <a href="#" class="entry-link">
                     <img src="" class="entry-img">
