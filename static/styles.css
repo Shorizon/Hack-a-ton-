@@ -106,7 +106,7 @@ html {
 }
 
 .delete-entry {
-    width: 20%;
+    width: 5%;
     background-color: #111;
     color: rgb(171, 171, 68);
     border-radius: 5rem;
@@ -165,9 +165,9 @@ html {
 }
 
 .entry-img {
-    width: 24vw;
-    height: 15vw;
-    object-fit: cover;
+    width: 10vw;
+    height: 5vw;
+    object-fit:contain;
     transition: all 0.5s;
 }
 
