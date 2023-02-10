@@ -38,6 +38,17 @@ async function create(req, res) {
     }
 }
 
+async function destroy(req, res) {
+    try {
+        const id = parseInt(req.params.id);
+        Diary.id = id;
+        const result = await Diary.destroy();
+        res.status(204).json(result);
+    } catch (err) {
+        res.status(404).json({ "error": err.message })
+    }
+}
+
 module.exports = {
-    index, getTop, getOne, create
+    index, getTop, getOne, create, destroy
 }

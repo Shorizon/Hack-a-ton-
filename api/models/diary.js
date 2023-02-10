@@ -12,7 +12,7 @@ class Diary {
 
 
     static async getAll() {
-        const response = await db.query("SELECT * FROM diary ORDER BY diary_id;");
+        const response = await db.query("SELECT * FROM diary ORDER BY diary_id DESC;");
         if (response.rows.length < 1)
             return ({
                 error: true,
@@ -47,6 +47,20 @@ class Diary {
         return new Diary(response.rows[0]);
     }
 
+    static async getOneById(id) {
+
+        if (!id || typeof id != "number") return ({
+            error: true,
+            messsage: "missing or wrong type of ID for the entries"
+        })
+
+        const response = await db.query("SELECT * FROM diary WHERE diary_id = $1;", [id]);
+        if (response.rows.length != 1) {
+            throw new Error("Unable to locate entry.")
+        }
+        return new Diary(response.rows[0]);
+    }
+
 
     static async destroy() {
 
@@ -61,13 +75,13 @@ class Diary {
     }
 
     static async create(data) {
-        const { name, content } = data
+        const { name, content, category } = data
         const check = await db.query("SELECT * FROM diary WHERE diary_name = $1;", [name]);
 
-        if (!name || !content)
+        if (!name || !content || !category)
             return ({
                 error: true,
-                message: "both fields are required to store a new entry"
+                message: "name/content/category fields are all required to store a new entry"
             })
 
         if (check.diary_name == name)
@@ -77,7 +91,7 @@ class Diary {
             })
 
 
-        const response = await db.query('INSERT INTO diary (diary_name, diary_content) VALUES ($1, $2) RETURNING *;', [name, content]);
+        const response = await db.query('INSERT INTO diary (diary_name, diary_content, diary_category) VALUES ($1, $2, $3) RETURNING *;', [name, content, category]);
         return response.rows.map(e => new Diary(e))
     }
 }
