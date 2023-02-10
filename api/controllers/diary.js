@@ -28,6 +28,16 @@ async function getOne(req, res) {
     }
 }
 
+async function getCategory(req, res) {
+    try {
+        const id = parseInt(req.params.id);
+        const entry = await Diary.getOneById(id);
+        res.status(200).json(entry);
+    } catch (err) {
+        res.status(404).json({ "error": err.message })
+    }
+}
+
 async function create(req, res) {
     const data = req.body
     try {
@@ -41,14 +51,31 @@ async function create(req, res) {
 async function destroy(req, res) {
     try {
         const id = parseInt(req.params.id);
+        const entry = await Diary.getOneById(id);
+        if (entry) {
+            const result = await Diary.destroy(id);
+            res.status(204).json(result);
+        } else {
+            res.status(404).json({ error: "id not found" })
+        }
+    } catch (err) {
+        res.status(404).json({ "error": err.message })
+    }
+}
+
+async function update(req, res) {
+    try {
+        const id = parseInt(req.params.id);
+        const data = req.body;
+        const entry = await Diary.getOneById(id);
         Diary.id = id;
-        const result = await Diary.destroy();
-        res.status(204).json(result);
+        const result = await Diary.update(data);
+        res.status(200).json(result);
     } catch (err) {
         res.status(404).json({ "error": err.message })
     }
 }
 
 module.exports = {
-    index, getTop, getOne, create, destroy
+    index, getTop, getOne, create, destroy, update
 }
