@@ -3,6 +3,8 @@ const entryNameInput = document.getElementById("entry-name-input");
 const entryContentInput = document.getElementById("diary-input-content");
 const entriesContainer = document.querySelector(".entry");
 
+
+// Adding new diary entries
 form.addEventListener("submit", function(event) {
   event.preventDefault();
 
@@ -37,3 +39,14 @@ form.addEventListener("submit", function(event) {
   entryNameInput.value = "";
   entryContentInput.value = "";
 });
+
+
+// Deleting new diary entries
+document.querySelectorAll(".delete-entry").forEach(function(button) {
+    button.addEventListener("click", function(e) {
+      e.preventDefault();
+      let parentNode = this.parentNode;
+      parentNode.parentNode.removeChild(parentNode);
+    });
+  });
+  
